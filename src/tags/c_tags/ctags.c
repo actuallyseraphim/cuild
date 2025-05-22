@@ -45,5 +45,5 @@ void c_exec_tag(const char *dir, struct dirent *entry) {
   for (struct obj_list_t *node = OBJS; node != 0; node = node->prev) {
     fprintf(BUILD_FILE, " obj/%s", node->name);
   }
-  fprintf(BUILD_FILE, "\n");
+  fprintf(BUILD_FILE, "\ndefault  %s\n", output);
 }
