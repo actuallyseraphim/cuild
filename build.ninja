@@ -1,0 +1,15 @@
+
+cflags = -Wall -Wextra -O2 -ggdb
+clibs = -lm
+
+rule cc
+  command = gcc $cflags -MMD -MF $out.d -c $in -o $out
+  depfile = $out.d
+
+rule link
+  command = gcc $clibs $in -o $out
+ 
+build obj/ctags.o: cc ./src/tags/c_tags/ctags.c
+build obj/tag.o: cc ./src/tags/tag.c
+build obj/projecttags.o: cc ./src/tags/project_tags/projecttags.c
+build main: link ./src/main.c obj/projecttags.o obj/tag.o obj/ctags.o
