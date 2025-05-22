@@ -12,4 +12,4 @@ rule link
 build obj/ctags.o: cc ./src/tags/c_tags/ctags.c
 build obj/tag.o: cc ./src/tags/tag.c
 build obj/projecttags.o: cc ./src/tags/project_tags/projecttags.c
-build main: link ./src/main.c obj/projecttags.o obj/tag.o obj/ctags.o
+build cuild: link ./src/cuild.c obj/projecttags.o obj/tag.o obj/ctags.o

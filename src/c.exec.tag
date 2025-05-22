@@ -1,2 +1,2 @@
-main
-main.c
+cuild
+cuild.c
