@@ -17,7 +17,7 @@ void c_object_tag(const char* dir, struct dirent* entry) {
   fscanf(file, "%s%s", output, input);
   fclose(file);
   fl_write(BUILD_FILES, "build obj/%s: cc %s/%s\n", output, dir,
-          input);
+           input);
   OBJS = fl_append(OBJS, output);
 }
 
@@ -42,7 +42,7 @@ void c_exec_tag(const char* dir, struct dirent* entry) {
   fscanf(file, "%s%s", output, input);
   fclose(file);
   fl_write(BUILD_FILES, "build %s: link %s/%s", output, dir,
-          input);
+           input);
   fl_iter(OBJS, __print_all_to_build_file);
   fl_write(BUILD_FILES, "\ndefault %s\n", output);
 }

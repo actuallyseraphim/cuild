@@ -12,7 +12,7 @@ void project_build_tag(const char* dir, struct dirent* entry) {
     perror(filename);
     return;
   }
-  
+
   free(filename);
 
   fseek(file, 0L, SEEK_END);
@@ -30,7 +30,7 @@ void project_build_tag(const char* dir, struct dirent* entry) {
   }
   BUILD_FILES = fl_append(BUILD_FILES, buildfilename);
   free(buildfilename);
-  
+
   fprintf(buildfile, "\n%s\n", buffer);
   free(buffer);
 

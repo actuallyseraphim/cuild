@@ -10,18 +10,18 @@ char* strfmt(const char* fmt, ...) {
   va_start(args, fmt);
   int size = vsnprintf(NULL, 0, fmt, args) + 1;
   va_end(args);
-  
+
   if (size <= 0)
     return NULL;
-  
+
   char* buf = malloc(size);
   if (!buf)
     return NULL;
-  
+
   va_start(args, fmt);
   vsnprintf(buf, size, fmt, args);
   va_end(args);
-  
+
   return buf;
 }
 
@@ -55,23 +55,23 @@ void fl_write(file_list_t* files, const char* fmt, ...) {
   va_start(args, fmt);
   int size = vsnprintf(NULL, 0, fmt, args) + 1;
   va_end(args);
-  
+
   if (size <= 0)
     return;
-  
+
   char* buf = malloc(size);
   if (!buf)
     return;
-  
+
   va_start(args, fmt);
   vsnprintf(buf, size, fmt, args);
   va_end(args);
-  
+
   __FL_WRITE_TEXT_SIZE = size - 1;
   __FL_WRITE_TEXT = buf;
   fl_iter(files, __fl_write_single);
 }
-    
+
 void fl_free(file_list_t* files) {
   file_list_t* node = files;
   while (node != 0) {
