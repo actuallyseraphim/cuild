@@ -1,53 +1,50 @@
 #include "tags/tag.h"
 #include <dirent.h>
-#include <string.h>
+#include <glob.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <glob.h>
+#include <string.h>
 
-void traverse(const char *dir, void (*func)(const char*, struct dirent*)) {
-  struct dirent *entry;
-  DIR *dp = opendir(dir);
+void traverse(const char* dir,
+              void (*func)(const char*, struct dirent*)) {
+  struct dirent* entry;
+  DIR* dp = opendir(dir);
   if (dp == NULL) {
     perror("opendir");
     return;
   }
-  
+
   while ((entry = readdir(dp)) != NULL) {
     if (entry->d_type == DT_DIR) {
-      if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
-	char* path = strfmt("%s/%s", dir, entry->d_name);
+      if (strcmp(entry->d_name, ".") != 0 &&
+          strcmp(entry->d_name, "..") != 0) {
+        char* path = strfmt("%s/%s", dir, entry->d_name);
         traverse(path, func);
-	free(path);
+        free(path);
       }
     } else {
       func(dir, entry);
     }
   }
-  
+
   closedir(dp);
 }
 
-#include "tags/project_tags/projecttags.h"
 #include "tags/c_tags/ctags.h"
+#include "tags/project_tags/projecttags.h"
 
 int main() {
   traverse(".", project_build_tag);
-  if (BUILD_FILE == 0) {
-    fprintf(stderr, "no build file");
+
+  if (!BUILD_FILES) {
+    fprintf(stderr, "no build files found\n");
     exit(1);
   }
-  
+
   traverse(".", c_object_tag);
   traverse(".", c_exec_tag);
-  
-  fclose(BUILD_FILE);
-  struct obj_list_t *node = OBJS;
-  while ( node != 0) {
-    free(node->name);
-    struct obj_list_t *t = node;
-    node = node->prev;
-    free(t);
-  }
+
+  fl_free(OBJS);
+  fl_free(BUILD_FILES);
   return 0;
 }

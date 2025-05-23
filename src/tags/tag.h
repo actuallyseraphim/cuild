@@ -1,20 +1,20 @@
 #pragma once
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <glob.h>
-#include <dirent.h>
 
-extern const char *BUILD_FILE_NAME;
-extern FILE *BUILD_FILE;
-
-struct obj_list_t {
-  struct obj_list_t *prev;
+typedef struct file_list_t file_list_t;
+struct file_list_t {
+  file_list_t* prev;
   char* name;
 };
 
-extern struct obj_list_t *OBJS;
+extern file_list_t* OBJS;
+extern file_list_t* BUILD_FILES;
 
-char *strfmt(const char *fmt, ...);
+char* strfmt(const char* fmt, ...);
+file_list_t* fl_append(file_list_t* files, const char* str);
+void fl_iter(file_list_t* files, void (*func)(char*));
+void fl_write(file_list_t* files, const char* fmt, ...);
+void fl_free(file_list_t* files);

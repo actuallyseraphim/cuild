@@ -1,33 +1,39 @@
 #include "projecttags.h"
 
-void project_build_tag(const char *dir, struct dirent *entry) {
+void project_build_tag(const char* dir, struct dirent* entry) {
   if (strcmp(entry->d_name, "ninja.build.tag") != 0) {
     return;
   }
-  
-  char *filename = strfmt("%s/%s", dir, entry->d_name);
-  FILE *file = fopen(filename, "r");
 
-  if (file == NULL) {
-    fprintf(stderr, "Unable to open file: %s!\n", filename);
+  char* filename = strfmt("%s/%s", dir, entry->d_name);
+  FILE* file = fopen(filename, "r");
+
+  if (!file) {
+    perror(filename);
     return;
   }
+  
   free(filename);
 
   fseek(file, 0L, SEEK_END);
   size_t size = ftell(file);
   fseek(file, 0L, SEEK_SET);
 
-  char *buffer = malloc(size+1);
+  char* buffer = malloc(size + 1);
   fread(buffer, size, 1, file);
 
-  if (BUILD_FILE) {
-    fclose(BUILD_FILE);
+  char* buildfilename = strfmt("%s/build.ninja", dir);
+  FILE* buildfile = fopen(buildfilename, "w");
+  if (!buildfile) {
+    perror(buildfilename);
+    return;
   }
+  BUILD_FILES = fl_append(BUILD_FILES, buildfilename);
+  free(buildfilename);
   
-  BUILD_FILE = fopen(BUILD_FILE_NAME, "w");
-  fprintf(BUILD_FILE, "\n%s\n", buffer);
+  fprintf(buildfile, "\n%s\n", buffer);
   free(buffer);
-  
+
   fclose(file);
+  fclose(buildfile);
 }
